@@ -88,7 +88,3 @@ La pantalla principal incluye un mapa interactivo que muestra las denuncias repo
 ## 🤖 Asistente IA "Hector"
 
 La aplicación incorpora a "Hector", un asistente de inteligencia artificial diseñado para guiar a los usuarios en el proceso de realizar denuncias de manera sencilla y efectiva.
-
-## 👥 Contribución
-
-Las contribuciones son bienvenidas. Por favor, abra un issue para discutir los cambios que le gustaría hacer antes de enviar un pull request.
