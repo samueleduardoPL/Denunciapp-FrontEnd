@@ -3,8 +3,8 @@ import {
   Text,
   View,
   SafeAreaView,
-  TextInput,
-  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -13,30 +13,30 @@ import useAuthStore from "../stores/AuthStore";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../Color";
 import AuthInput from "../components/AuthInput";
-import { KeyboardAvoidingView, Platform } from "react-native";
 
 const RegisterScreen = () => {
   const [userForm, setUserForm] = useState({
-    name: "",
-    lastname: "",
-    email: "",
+    fullName: "",
+    cedula: "",
     password: "",
     confirmPassword: "",
   });
+
   const { setUser, setIsLoggedIn } = useAuthStore();
   const navigation = useNavigation();
+
   const handleChange = (name: string, value: string) => {
     setUserForm({
       ...userForm,
       [name]: value,
     });
   };
+
   const handleSubmit = () => {
     setUser({
       id: Math.random().toString(),
-      name: userForm.name,
-      lastname: userForm.lastname,
-      email: userForm.email,
+      fullName: userForm.fullName,
+      cedula: userForm.cedula,
       password: userForm.password,
     });
     setIsLoggedIn(true);
@@ -45,9 +45,8 @@ const RegisterScreen = () => {
 
   const isBothPasswordsEqual = userForm.password === userForm.confirmPassword;
   const isFormValid =
-    userForm.name &&
-    userForm.lastname &&
-    userForm.email &&
+    userForm.fullName &&
+    userForm.cedula &&
     userForm.password &&
     userForm.confirmPassword &&
     isBothPasswordsEqual;
@@ -61,29 +60,24 @@ const RegisterScreen = () => {
       <SafeAreaView style={styles.container}>
         <View style={styles.formContainer}>
           <AntDesign name="user" size={64} color={colors.primary} />
-          <Text style={styles.title}>Registráte</Text>
+          <Text style={styles.title}>Registrate</Text>
           <View style={{ width: "100%" }}>
             <AuthInput
-              label="Nombres"
-              placeholder="Fulano"
-              value={userForm.name}
-              onChangeText={(text) => handleChange("name", text)}
+              label="Nombre completo"
+              placeholder="Juan Pérez"
+              value={userForm.fullName}
+              onChangeText={(text) => handleChange("fullName", text)}
             />
             <AuthInput
-              label="Apellidos"
-              placeholder="Perez Gonzalez"
-              value={userForm.lastname}
-              onChangeText={(text) => handleChange("lastname", text)}
-            />
-            <AuthInput
-              label="Correo Electrónico"
-              placeholder="fulano@google.com"
-              value={userForm.email}
-              onChangeText={(text) => handleChange("email", text)}
+              label="Cédula"
+              placeholder="000-0000000-0"
+              value={userForm.cedula}
+              onChangeText={(text) => handleChange("cedula", text)}
             />
             <AuthInput
               label="Contraseña"
               placeholder="Contraseña"
+              secureTextEntry
               value={userForm.password}
               onChangeText={(text) => handleChange("password", text)}
             />
@@ -142,5 +136,3 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
-
-//RegisterScreen
