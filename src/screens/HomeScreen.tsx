@@ -12,6 +12,9 @@ import useAuthStore from "../stores/AuthStore";
 import Button from "../components/Button";
 import { colors } from "../../Color";
 import MapView from "react-native-maps";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../navigation/Types";
 
 // const ProfileDropDown = () => {
 //   const [dropdownVisible, setDropdownVisible] =  useState(false);
@@ -26,7 +29,11 @@ import MapView from "react-native-maps";
 // }
 
 const HomeScreen = () => {
-  const { user } = useAuthStore();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const handleDenunciaPress = () => {
+    navigation.navigate('Chat');
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -70,7 +77,7 @@ const HomeScreen = () => {
           />
           <Button
             title="Hacer denuncia"
-            onPress={() => {}}
+            onPress={handleDenunciaPress}
             backgroundColor={colors.primary}
             textColor={colors.secondary}
           />
