@@ -6,12 +6,24 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Feather from "@expo/vector-icons/Feather";
 import useAuthStore from "../stores/AuthStore";
 import Button from "../components/Button";
 import { colors } from "../../Color";
 import MapView from "react-native-maps";
+
+// const ProfileDropDown = () => {
+//   const [dropdownVisible, setDropdownVisible] =  useState(false);
+
+//   return (
+//     {dropdownVisible && (
+//       <View style={styles.dropdown}>
+//         <TouchableOpacity
+//       </View>
+//     )}
+//   )
+// }
 
 const HomeScreen = () => {
   const { user } = useAuthStore();
@@ -146,4 +158,20 @@ const styles = StyleSheet.create({
     shadowRadius: 1.0,
     elevation: 1,
   },
+  // dropdown: {
+  //   position: "absolute",
+  //   top: 40, 
+  //   left: 0,
+  //   backgroundColor: "white",
+  //   padding: 10,
+  //   borderRadius: 5,
+  //   shadowColor: "#000",
+  //   shadowOffset: { width: 0, height: 2 },
+  //   shadowOpacity: 0.2,
+  //   shadowRadius: 2,
+  //   elevation: 5,
+  // },
+  // dropdownItem: {
+  //   padding: 10,
+  // },
 });

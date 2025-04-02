@@ -5,6 +5,8 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -14,7 +16,19 @@ import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../Color";
 import AuthInput from "../components/AuthInput";
 
+const GoBackBtn = () =>{
+  const navigation = useNavigation();
+
+  return(
+    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
+      <Image source={require("../../assets/Arrow 1.png")}/>
+    </TouchableOpacity>
+  )
+}
+
+
 const RegisterScreen = () => {
+
   const [userForm, setUserForm] = useState({
     fullName: "",
     cedula: "",
@@ -57,11 +71,17 @@ const RegisterScreen = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
+      <View>
+        <GoBackBtn/>
+      </View>
       <SafeAreaView style={styles.container}>
         <View style={styles.formContainer}>
           <AntDesign name="user" size={64} color={colors.primary} />
           <Text style={styles.title}>Registrate</Text>
           <View style={{ width: "100%" }}>
+
+
+            
             <AuthInput
               label="Nombre completo"
               placeholder="Juan Pérez"
@@ -134,5 +154,18 @@ const styles = StyleSheet.create({
     color: colors.primary,
     marginTop: 10,
     marginBottom: 20,
+  },
+  button: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    padding: 10,
+    zIndex: 10,
+
+  },
+  image: {
+    width: 30,
+    height: 30,
+    resizeMode: "contain",
   },
 });
