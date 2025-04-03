@@ -15,24 +15,28 @@ import MapView from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/Types";
-
-// const ProfileDropDown = () => {
-//   const [dropdownVisible, setDropdownVisible] =  useState(false);
-
-//   return (
-//     {dropdownVisible && (
-//       <View style={styles.dropdown}>
-//         <TouchableOpacity
-//       </View>
-//     )}
-//   )
-// }
+import DropdownMenuScreen from "./DropdownMenuScreen";
 
 const HomeScreen = () => {
+  const [dropdownVisible, setDropdownVisible] = useState(false); // Mover useState dentro del componente
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
+  const toggleDropdown = () => {
+    setDropdownVisible((prev) => !prev);
+  };
+
+  const handleProfilePress = () => {
+    setDropdownVisible(false);
+    navigation.navigate("Profile"); 
+  };
+
+  const handleLogout = () => {
+    setDropdownVisible(false);
+    useAuthStore.getState().logout();
+  };
+
   const handleDenunciaPress = () => {
-    navigation.navigate('Chat');
+    navigation.navigate("Chat");
   };
 
   return (
@@ -42,10 +46,17 @@ const HomeScreen = () => {
           <TouchableOpacity>
             <Feather name="menu" size={34} color="black" />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={toggleDropdown}>
             <Feather name="user" size={34} color="black" />
           </TouchableOpacity>
         </View>
+        
+        <DropdownMenuScreen
+          visible={dropdownVisible}
+          onLogout={handleLogout}
+          onProfile={handleProfilePress}
+          position={{onRight: 10, onTop: 40}}
+        />
         <Text style={styles.title}>¡Denuncia Ya con Hector!</Text>
         <Text style={styles.subtitle}>
           Haz una denuncia rápida usando nuestro agente de inteligencia
@@ -64,7 +75,6 @@ const HomeScreen = () => {
             backgroundColor={colors.secondary}
             textColor={colors.primary}
             style={{
-              // shadow
               shadowColor: colors.primary,
               shadowOffset: {
                 width: 0,
@@ -103,7 +113,7 @@ const HomeScreen = () => {
             backgroundColor={colors.primary}
             textColor={colors.secondary}
             style={{
-              width: " 60%",
+              width: "60%",
             }}
           />
         </View>
@@ -123,7 +133,6 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-
     alignItems: "center",
     marginBottom: 40,
   },
@@ -165,20 +174,18 @@ const styles = StyleSheet.create({
     shadowRadius: 1.0,
     elevation: 1,
   },
-  // dropdown: {
-  //   position: "absolute",
-  //   top: 40, 
-  //   left: 0,
-  //   backgroundColor: "white",
-  //   padding: 10,
-  //   borderRadius: 5,
-  //   shadowColor: "#000",
-  //   shadowOffset: { width: 0, height: 2 },
-  //   shadowOpacity: 0.2,
-  //   shadowRadius: 2,
-  //   elevation: 5,
-  // },
-  // dropdownItem: {
-  //   padding: 10,
-  // },
+
+  dropdown:{
+    position: "absolute",
+    top: 40,
+    right: 10,
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 5,
+  }
 });
