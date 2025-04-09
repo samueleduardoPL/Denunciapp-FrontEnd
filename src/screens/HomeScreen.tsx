@@ -11,23 +11,21 @@ import Feather from "@expo/vector-icons/Feather";
 import useAuthStore from "../stores/AuthStore";
 import Button from "../components/Button";
 import { colors } from "../../Color";
-import MapView from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/Types";
+import UniversalMap from "../components/MapComponent";
 import DropdownMenuScreen from "./DropdownMenuScreen";
 
 const HomeScreen = () => {
-  const [dropdownVisible, setDropdownVisible] = useState(false); // Mover useState dentro del componente
+  const [dropdownVisible, setDropdownVisible] = useState(false);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-  const toggleDropdown = () => {
-    setDropdownVisible((prev) => !prev);
-  };
+  const toggleDropdown = () => setDropdownVisible((prev) => !prev);
 
   const handleProfilePress = () => {
     setDropdownVisible(false);
-    navigation.navigate("Profile"); 
+    navigation.navigate("Profile");
   };
 
   const handleLogout = () => {
@@ -50,25 +48,21 @@ const HomeScreen = () => {
             <Feather name="user" size={34} color="black" />
           </TouchableOpacity>
         </View>
-        
+
         <DropdownMenuScreen
           visible={dropdownVisible}
           onLogout={handleLogout}
           onProfile={handleProfilePress}
-          position={{onRight: 10, onTop: 40}}
+          position={{ onRight: 10, onTop: 40 }}
         />
+
         <Text style={styles.title}>¡Denuncia Ya con Hector!</Text>
         <Text style={styles.subtitle}>
           Haz una denuncia rápida usando nuestro agente de inteligencia
           artificial Hector
         </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
-          }}
-        >
+
+        <View style={styles.buttonRow}>
           <Button
             title="Aprende sobre Hector"
             onPress={() => {}}
@@ -76,10 +70,7 @@ const HomeScreen = () => {
             textColor={colors.primary}
             style={{
               shadowColor: colors.primary,
-              shadowOffset: {
-                width: 0,
-                height: 1,
-              },
+              shadowOffset: { width: 0, height: 1 },
               shadowOpacity: 0.18,
               shadowRadius: 1.0,
               elevation: 1,
@@ -92,29 +83,19 @@ const HomeScreen = () => {
             textColor={colors.secondary}
           />
         </View>
+
         <Text style={styles.mapTitle}>Mapa de denuncias </Text>
         <View style={styles.mapContainer}>
-          <MapView
-            style={{ width: "100%", height: 400 }}
-            initialRegion={{
-              latitude: 18.4861,
-              longitude: -69.9312,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          />
+          <UniversalMap />
         </View>
-        <View
-          style={{ alignItems: "flex-end", marginTop: 20, paddingBottom: 60 }}
-        >
+
+        <View style={styles.verMapaBtn}>
           <Button
             title="Ver mapa completo"
             onPress={() => {}}
             backgroundColor={colors.primary}
             textColor={colors.secondary}
-            style={{
-              width: "60%",
-            }}
+            style={{ width: "60%" }}
           />
         </View>
       </ScrollView>
@@ -166,26 +147,19 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     marginTop: 10,
     shadowColor: colors.primary,
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.18,
     shadowRadius: 1.0,
     elevation: 1,
   },
-
-  dropdown:{
-    position: "absolute",
-    top: 40,
-    right: 10,
-    backgroundColor: "white",
-    padding: 10,
-    borderRadius: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 5,
-  }
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
+  verMapaBtn: {
+    alignItems: "flex-end",
+    marginTop: 20,
+    paddingBottom: 60,
+  },
 });

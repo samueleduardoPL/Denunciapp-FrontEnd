@@ -16,6 +16,8 @@ import useAuthStore from "../stores/AuthStore";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../Color";
 import AuthInput from "../components/AuthInput";
+import { API_BASE_URL } from "@env";
+
 
 const GoBackBtn = () =>{
   const navigation = useNavigation();
@@ -42,15 +44,36 @@ const LoginScreen = () => {
       [name]: value,
     });
   };
-  const handleSubmit = () => {
-    setUser({
-      id: Math.random().toString(),
-      name: userForm.name,
-      lastname: userForm.lastname,
-      email: userForm.email,
-      password: userForm.password,
-    });
-    setIsLoggedIn(true);
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("https://your-backend-url.com/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: userForm.email,
+          password: userForm.password,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Error en la autenticación");
+      }
+  
+      const data = await response.json();
+      setUser({
+        id: data.id,
+        name: data.name,
+        lastname: data.lastname,
+        email: data.email,
+      });
+      setIsLoggedIn(true);
+      navigation.navigate("Home"); // Redirige a la pantalla principal
+    } catch (error) {
+      console.error(error);
+      alert("Credenciales incorrectas. Por favor, inténtalo de nuevo.");
+    }
   };
 
   return (
