@@ -46,14 +46,14 @@ const LoginScreen = () => {
   };
   const handleSubmit = async () => {
     try {
-      const response = await fetch("https://your-backend-url.com/api/login", {
+      const response = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: userForm.email,
-          password: userForm.password,
+          Correo: userForm.email, // Cambiado a "Correo"
+          Contraseña: userForm.password, // Cambiado a "Contraseña"
         }),
       });
   
@@ -69,10 +69,10 @@ const LoginScreen = () => {
         email: data.email,
       });
       setIsLoggedIn(true);
-      navigation.navigate("Home"); // Redirige a la pantalla principal
-    } catch (error) {
-      console.error(error);
-      alert("Credenciales incorrectas. Por favor, inténtalo de nuevo.");
+      navigation.navigate("Home");
+    } catch (error: any) {
+      console.error("Error:", error.message);
+      alert(`Error: ${error.message}`);
     }
   };
 
@@ -90,8 +90,8 @@ const LoginScreen = () => {
           <Text style={styles.title}>Inicio de Sesión</Text>
           <View style={{ width: "100%" }}>
             <AuthInput
-              label="Usuario"
-              placeholder="Usuario"
+              label="Correo"
+              placeholder="Correo"
               value={userForm.email}
               onChangeText={(text) => handleChange("email", text)}
             />

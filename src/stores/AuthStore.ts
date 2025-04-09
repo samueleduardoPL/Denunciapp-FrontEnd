@@ -5,7 +5,7 @@ export type User = {
     name: string
     lastname: string
     email: string
-    password: string
+    password?: string
 }
 
 interface AuthStore {
