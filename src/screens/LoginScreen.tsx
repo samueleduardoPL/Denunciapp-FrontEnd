@@ -16,7 +16,7 @@ import useAuthStore from "../stores/AuthStore";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../Color";
 import AuthInput from "../components/AuthInput";
-import { API_BASE_URL } from "@env";
+
 
 
 const GoBackBtn = () =>{
@@ -46,7 +46,8 @@ const LoginScreen = () => {
   };
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/login`, {
+      console.log("EXPO_PUBLIC_API_BASE_URL:", process.env.EXPO_PUBLIC_API_BASE_URL); // Verifica si la URL es correcta
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
