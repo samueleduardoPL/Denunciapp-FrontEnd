@@ -2,21 +2,19 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
-  TouchableOpacity,
-  ImageBackground,
   Dimensions,
 } from "react-native";
 import React from "react";
 import Button from "../components/Button";
 import { Image } from "expo-image";
 import { colors } from "../../Color";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../navigation/Types";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 const PreloginScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleLogin = () => {
     navigation.navigate("Login");

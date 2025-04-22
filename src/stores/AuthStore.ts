@@ -6,6 +6,7 @@ export type User = {
     lastname: string
     email: string
     password?: string
+    
 }
 
 interface AuthStore {
@@ -13,6 +14,7 @@ interface AuthStore {
   setIsLoggedIn: (isLoggedIn:boolean) => void
   user: User | null
   setUser: (user:User) => void
+  logout: () => void
 }
 
 const useAuthStore = create<AuthStore>((set) => ({
@@ -20,6 +22,7 @@ const useAuthStore = create<AuthStore>((set) => ({
   setIsLoggedIn: (isLoggedIn:boolean) => set({ isLoggedIn }),
   user: null,
   setUser: (user:User) => set({ user }),
+  logout: () => set({ isLoggedIn: false, user: null }),
 }))
 
 export default useAuthStore

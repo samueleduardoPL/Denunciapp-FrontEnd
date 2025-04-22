@@ -13,14 +13,15 @@ import React, { useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Button from "../components/Button";
 import useAuthStore from "../stores/AuthStore";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { colors } from "../../Color";
 import AuthInput from "../components/AuthInput";
+import { RootStackParamList } from "../navigation/Types";
 
 
 
 const GoBackBtn = () =>{
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return(
     <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>

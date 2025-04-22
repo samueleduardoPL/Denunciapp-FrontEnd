@@ -1,22 +1,35 @@
 import React from "react";
-import { View, SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { colors } from "../../Color";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../navigation/Types";
 
 type DropdownMenuScreenProps = {
   visible: boolean;
   onLogout: () => void;
   onProfile: () => void;
+  onClose: () => void; 
+  position?: {
+    onRight?: number;
+    onTop?: number;
+  };
 };
 
-const DropdownMenuScreen: React.FC<DropdownMenuScreenProps> = ({ visible, onLogout, onProfile, }) => {
+const DropdownMenuScreen: React.FC<DropdownMenuScreenProps> = ({ visible, onLogout, onProfile, onClose, position }) => {
   if (!visible) return null;
 
+  const dropdownStyle = {
+    ...styles.dropdown,
+    top: position?.onTop !== undefined ? position.onTop : 60,
+    right: position?.onRight !== undefined ? position.onRight : 10,
+    left: undefined, 
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.dropdown}>
+    <TouchableOpacity 
+      style={styles.container}
+      activeOpacity={1}
+      onPress={onClose}
+    >
+      <View style={dropdownStyle}>
         <TouchableOpacity style={styles.dropdownItem} onPress={onProfile}>
           <Text style={styles.dropdownText}>Mi Perfil</Text>
         </TouchableOpacity>
@@ -27,27 +40,33 @@ const DropdownMenuScreen: React.FC<DropdownMenuScreenProps> = ({ visible, onLogo
           <Text style={styles.dropdownText}>Mis reportes</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 100,
   },
   dropdown: {
     position: "absolute",
-    top: -40,
-    left: 250,
-    right:10,
     backgroundColor: "white",
+    minWidth: 150,
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#eee",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
     elevation: 5,
+    zIndex: 101,
   },
   dropdownItem: {
     padding: 10,
