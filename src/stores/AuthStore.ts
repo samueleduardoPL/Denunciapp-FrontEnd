@@ -22,7 +22,9 @@ const useAuthStore = create<AuthStore>((set) => ({
   setIsLoggedIn: (isLoggedIn:boolean) => set({ isLoggedIn }),
   user: null,
   setUser: (user:User) => set({ user }),
-  logout: () => set({ isLoggedIn: false, user: null }),
+  logout: () => {
+    set({ user: null, isLoggedIn: false }); // Clear the user and set isLoggedIn to false
+  },
 }))
 
 export default useAuthStore
