@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Button from "../components/Button";
 import Feather from "@expo/vector-icons/Feather";
 import {
@@ -8,6 +8,7 @@ import {
     View,
     SafeAreaView,
     TouchableOpacity,
+    Keyboard,
     KeyboardAvoidingView,
     ScrollView,
     useAnimatedValue,
@@ -32,8 +33,15 @@ import { colors } from "../../Color";
         text: '¡Te escucho alto y claro! Detállame qué pasó y dónde pasó, para poder ayudarte ciudadano.',
         isUser: false
     }]);
+    const [chatHistory, setChatHistory] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
 
-    const handleSendMessage = () => {
+    const flatListRef = useRef<FlatList>(null);
+
+    useEffect(() => {
+      flatListRef.current?.scrollToEnd({ animated: true });
+    }, [Messages]);
+
+    const handleSendMessage = async () => {
         if (inputText.trim()){
             const newUserMessage: Message = {
                 id: Date.now().toString(),
@@ -44,54 +52,79 @@ import { colors } from "../../Color";
             setMessages(prevMessages => [...prevMessages, newUserMessage]);
             setInputText('');
 
+            try {
+              // Send message to your backend
+              const response = await fetch(`${process.env.EXPO_PUBLIC_API_BASE_URL}/api/Chat`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  message: inputText, 
+                  history: chatHistory,// Send the user's message
+                }),
+              });
+      
+              const data = await response.json();
+      
+              const botResponse: Message = {
+                id: (Date.now() + 1).toString(),
+                text: data.response, // Response from backend
+                isUser: false,
+              };
+      
+              setMessages(prevMessages => [...prevMessages, botResponse]);
 
-            setTimeout(() => {
-                const botResponse: Message ={
-                    id: (Date.now() + 1).toString(),
-                    text: 'Gracias por tu denuncia. Se ha registrado como "infraestructura pública peligrosa" Será enviada a las autoridades competentes. Tu reporte ayuda a prevenir accidentes y mejorar tu comunidad.',
-                    isUser: false,
-                };
+              setChatHistory(data.history);
+            } catch (error) {
+              console.error("Error sending message:", error);
+            }
 
-                setMessages(prevMessages => [...prevMessages, botResponse]);
-            }, 1000);
-        }
-            };
+          };
 
+        };
 
-            const renderHeader = () => (
-<View style= {styles.header}>
-    <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Feather name="arrow-left" size={24} color={colors.primary}/>
-    </TouchableOpacity>
-    <Text style={styles.headerTitle}>Hola ciudadano!</Text>
-    <View style={{width: 24}}/>
-</View>
+const renderHeader = () => (
+  <View style= {styles.header}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Feather name="arrow-left" size={24} color={colors.primary}/>
+      </TouchableOpacity>
+      <Text style={styles.headerTitle}>Hola ciudadano!</Text>
+      <View style={{width: 24}}/>
+  </View>
 );
 
 const renderMessage = ({ item }: {item: Message }) => (
-<View style={[
-styles.messageBubble,
-item.isUser ? styles.userMessage : styles.botMessage
-]}>
 
-    <Text style={[
- styles.messageText,
- item.isUser ? styles.userMessageText : styles.botMessageText
+    <View style={[
+    styles.messageBubble,
+    item.isUser ? styles.userMessage : styles.botMessage
     ]}>
-    {item.text}
-    </Text>
-</View>
-);
+
+        <Text style={[
+    styles.messageText,
+    item.isUser ? styles.userMessageText : styles.botMessageText
+        ]}>
+        {item.text}
+        </Text>
+    </View>
+
+  );
 
 return (
+
 <SafeAreaView style={styles.container}>
 {renderHeader()}
 
 <FlatList
+ref={flatListRef}
 data={Messages}
 renderItem={renderMessage}
 keyExtractor={item => item.id}
 contentContainerStyle={styles.messageList}
+showsVerticalScrollIndicator={false}
+keyboardShouldPersistTaps="handled"
+onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
 />
 
 <KeyboardAvoidingView

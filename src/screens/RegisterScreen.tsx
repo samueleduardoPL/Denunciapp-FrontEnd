@@ -32,6 +32,7 @@ const RegisterScreen = () => {
   const [userForm, setUserForm] = useState({
     fullName: "",
     cedula: "",
+    correo: "",
     password: "",
     confirmPassword: "",
   });
@@ -46,21 +47,53 @@ const RegisterScreen = () => {
     });
   };
 
-  const handleSubmit = () => {
-    setUser({
-      id: Math.random().toString(),
-      fullName: userForm.fullName,
-      cedula: userForm.cedula,
-      password: userForm.password,
-    });
-    setIsLoggedIn(true);
-    navigation.navigate("MainNavigator");
+  const handleSubmit = async () => {
+    
+    if (!isFormValid) return;
+
+    try {
+      console.log("EXPO_PUBLIC_API_BASE_URL:", process.env.EXPO_PUBLIC_API_BASE_URL);
+
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_BASE_URL}/api/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          Nombre: userForm.fullName,
+          Cedula: userForm.cedula,
+          Correo: userForm.correo, // You can modify this if you want a real email field
+          Contraseña: userForm.password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error en el registro: ${errorText}`);
+      }
+
+      const data = await response.json();
+      setUser({
+        id: data.id,
+        name: data.Nombre,
+        cedula: data.Cedula,
+        email: data.Correo,
+      });
+
+      setIsLoggedIn(true);
+      navigation.navigate("MainNavigator");
+    } catch (error: any) {
+      console.error("Error:", error.message);
+      alert(`Error: ${error.message}`);
+    }
+    
   };
 
   const isBothPasswordsEqual = userForm.password === userForm.confirmPassword;
   const isFormValid =
     userForm.fullName &&
     userForm.cedula &&
+    userForm.correo &&
     userForm.password &&
     userForm.confirmPassword &&
     isBothPasswordsEqual;
@@ -93,6 +126,12 @@ const RegisterScreen = () => {
               placeholder="000-0000000-0"
               value={userForm.cedula}
               onChangeText={(text) => handleChange("cedula", text)}
+            />
+            <AuthInput
+              label="Correo"
+              placeholder="Ejemplo@gmail.com"
+              value={userForm.correo}
+              onChangeText={(text) => handleChange("correo", text)} 
             />
             <AuthInput
               label="Contraseña"

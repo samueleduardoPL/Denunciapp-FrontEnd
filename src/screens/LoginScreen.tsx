@@ -47,7 +47,7 @@ const LoginScreen = () => {
   const handleSubmit = async () => {
     try {
       console.log("EXPO_PUBLIC_API_BASE_URL:", process.env.EXPO_PUBLIC_API_BASE_URL); // Verifica si la URL es correcta
-      const response = await fetch(`${process.env.EXPO_PUBLIC_API_BASE_URL}/login`, {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_BASE_URL}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
